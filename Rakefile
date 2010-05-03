@@ -1,9 +1,3 @@
-lib = File.expand_path('../lib/', __FILE__)
-$:.unshift lib unless $:.include?(lib)
-
-require 'rubygems'
-require 'nagios3/version'
-
 # RSpec tasks
 desc 'Run examples'
 task :spec do
@@ -18,7 +12,7 @@ end
 
 desc 'Install the gem locally'
 task :install => :build do
-  system "gem install nagios3-#{Nagios3::VERSION}"
+  system "gem install nagios3"
 end
 
 # desc 'Push the gem to gemcutter'
