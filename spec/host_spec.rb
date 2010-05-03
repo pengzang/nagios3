@@ -14,8 +14,7 @@ describe Nagios3::Host do
   end
   
   before(:each) do
-    File.open(Nagios3.hosts_path, "w") { |f| }
-    @host = Nagios3::Host.new
+    @host = Nagios3::Host.new(:id => 1)
   end
   
   it 'should have the supported Nagios3 host fields' do
@@ -27,13 +26,14 @@ describe Nagios3::Host do
   end
   
   it 'should be in the UP state' do
-    @host.host_name = 'test-cmts'
+    host = Nagios3::Host.find(67)
     @host.state.should == "UP"
   end
   
   it 'should save the host' do
     @host.host_name = 'gar-cmts'
     @host.save
+    @host.destroy
   end
   
   it 'should update the host' do
@@ -41,22 +41,22 @@ describe Nagios3::Host do
   end
   
   it 'should destroy the host' do
+    @host.id = 5
     @host.host_name = 'gar-cmts'
     @host.save
-    Nagios3::Host.configured?(@host.host_name).should be(true)
-    
+    Nagios3::Host.configured?(@host.id).should be(true)
     @host.destroy
-    Nagios3::Host.configured?(@host.host_name).should be(false)
+    Nagios3::Host.configured?(@host.id).should be(false)
   end
   
   it 'should find a saved host' do
-    host = Nagios3::Host.find('test-cmts')
+    host = Nagios3::Host.find(67)
     host.should_not be(nil)
   end
   
   it 'should list all saved hosts' do
     hosts = Nagios3::Host.find(:all)
-    hosts.size.should == 1
+    hosts.size.should == 2
   end
   
 end

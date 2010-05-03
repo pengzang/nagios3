@@ -11,6 +11,7 @@ module Nagios3
       
       def to_config
         config = "define contact {\n"
+        config << "\t_ID #{self.id}\n"
         config << "\tcontact_name #{self.name}\n"
         config << "\talias #{self.alias}\n"
         config << "\tcontactgroups #{self.groups}\n" unless self.groups.nil?
@@ -25,7 +26,6 @@ module Nagios3
         config << "\tservice_notification_period #{self.service_notification_period}\n"
         config << "\tservice_notification_options #{self.service_notification_options}\n"
         config << "\tservice_notifications_enabled #{self.service_notifications_enabled}\n"
-        config << "\t_ID #{self.id}\n"
         config << "}\n"
       end
       

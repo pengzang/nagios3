@@ -30,7 +30,7 @@ module Nagios3
       end
       
       def save
-        if Nagios3::Service.configured?(self.host_name, self.description)
+        if Nagios3::Service.configured?(self.id)
           raise DuplicateServiceError
         end
         File.open(Nagios3.services_path, "a") { |f| f.puts(self.to_config) }
@@ -38,29 +38,30 @@ module Nagios3
       end
       
       def update
-        unless Nagios3::Service.configured?(self.host_name, self.description)
-          raise HostNotFoundError
-        end
-        new_config = File.read(Nagios3.services_path).gsub(/define service\s*\{(\s*host_name\s#{self.host_name}\s+service_description\s#{self.description}(.*?))\}/m, self.to_config)
+        unless Nagios3::Service.configured?(self.id); raise HostNotFoundError; end
+        new_config = File.read(Nagios3.services_path).gsub(
+          self.class.object_regexp(self.id), self.to_config
+        )
         File.open(Nagios3.services_path, "w") { |f| f.puts(new_config) }
         self
       end
       
       def destroy
-        unless Nagios3::Service.configured?(self.host_name, self.description)
-          raise HostNotFoundError
-        end
-        new_config = File.read(Nagios3.services_path).gsub(/define service\s*\{(\s*host_name\s#{self.host_name}\s+service_description\s#{self.description}(.*?))\}/m, "")
+        unless Nagios3::Service.configured?(self.id); raise HostNotFoundError; end
+        new_config = File.read(Nagios3.services_path).gsub(
+          self.class.object_regexp(self.id), ""
+        )
         File.open(Nagios3.services_path, "w") { |f| f.puts(new_config) }
+        self
       end
       
-      def self.included?(klass)
+      def self.included(klass)
         klass.extend(ClassMethods)
       end
       
       module ClassMethods
-        def configured?(host_name, service_description)
-          if File.read(Nagios3.services_path).match /define service\s*\{\s*host_name\s#{host_name}\s+service_description\s#{service_description}(.*?)\}/m
+        def configured?(id)
+          if File.read(Nagios3.services_path).match(object_regexp(id))
             true
           else
             false
@@ -70,22 +71,26 @@ module Nagios3
         def find(*args)
           case args.first
           when :all then find_every
-          else find_by_host_name_and_service_description(args.first, args.second)
+          else find_by_id(args.first)
           end
+        end
+        
+        def object_regexp(id)
+          /define service\s*\{([^\{]*?_ID\s+#{id}[^\}]*?)\}\s/m
         end
         
       private
         def find_every
-          object_cache, services = File.read(Nagios3.object_path), []
+          object_cache, services = File.read(Nagios3.services_path), []
           object_cache.scan(/define service\s*\{(.*?)\}/m) do |match| 
             services << parse($1)
           end
           services
         end
         
-        def find_by_host_name_and_service_description(host_name, service_description)
-          object_cache, service = File.read(Nagios3.object_path), nil
-          if object_cache.match /define service\s*\{(\s*host_name\s#{host_name}\s+service_description\s#{service_description}(.*?))\}/m
+        def find_by_id(id)
+          object_cache, service = File.read(Nagios3.services_path), nil
+          if object_cache.match(object_regexp(id))
             service = parse($1)
           end
           service

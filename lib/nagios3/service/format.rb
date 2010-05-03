@@ -9,21 +9,14 @@ module Nagios3
   class Service
     module Format
       
-      # define service {
-      #   use                             generic-service
-      #   host_name                       im-cmts
-      #   service_description             SNMP
-      #   check_command                   snmp_cmts
-      #   _ID                             1
-      # }
       def to_config
         config = "define service {\n"
+        config << "\t_ID #{self.id}\n"
         config << "\thost_name #{self.host_name}\n"
         config << "\tservice_description #{self.description}\n"
         config << "\tuse #{self.use}\n"
         config << "\tcheck_command #{self.check_command}\n"
         config << "\tcontacts #{self.contacts}\n"
-        config << "\t_ID #{self.id}\n"
         config << "}\n"
       end
       

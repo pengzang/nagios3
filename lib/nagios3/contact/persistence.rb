@@ -10,21 +10,25 @@ module Nagios3
     module Persistence
       
       def save
-        if Nagios3::Contact.configured?(self.name); raise DuplicateContactError; end
+        if Nagios3::Contact.configured?(self.id); raise DuplicateContactError; end
         File.open(Nagios3.contacts_path, "a") { |f| f.puts(self.to_config) }
         self
       end
       
       def update
-        unless Nagios3::Contact.configured?(self.name); raise ContactNotFoundError; end
-        new_config = File.read(Nagios3.contacts_path).gsub(/define contact\s*\{(\s*contact_name\s*#{self.name}(.*?))\}/m, self.to_config)
+        unless Nagios3::Contact.configured?(self.id); raise ContactNotFoundError; end
+        new_config = File.read(Nagios3.contacts_path).gsub(
+          self.class.object_regexp(id), self.to_config
+        )
         File.open(Nagios3.contacts_path, "w") { |f| f.puts(new_config) }
         self
       end
       
       def destroy
-        unless Nagios3::Contact.configured?(self.name); raise ContactNotFoundError; end
-        new_config = File.read(Nagios3.contacts_path).gsub(/define contact\s*\{(\s*contact_name\s*#{self.name}(.*?))\}/m, "")
+        unless Nagios3::Contact.configured?(self.id); raise ContactNotFoundError; end
+        new_config = File.read(Nagios3.contacts_path).gsub(
+          self.class.object_regexp(self.id), ""
+        )
         File.open(Nagios3.contacts_path, "w") { |f| f.puts(new_config) }
         self
       end
@@ -34,9 +38,9 @@ module Nagios3
       end
       
       module ClassMethods
-        def configured?(name)
+        def configured?(id)
           config = File.read(Nagios3.contacts_path)
-          if config.match /define contact\s*?\{\s*?contact_name\s*?#{name}(.*?)\}/m
+          if config.match(object_regexp(id))
             true
           else
             false
@@ -46,22 +50,26 @@ module Nagios3
         def find(*args)
           case args.first
           when :all then find_every
-          else           find_by_contact_name(args.first)
+          else           find_by_id(args.first)
           end
+        end
+        
+        def object_regexp(id)
+          /define contact\s*\{([^\{]*?_ID\s*#{id}[^\}]*?)\}\s/m
         end
         
       private
         def find_every
-          object_cache, contacts = File.read(Nagios3.object_path), []
+          object_cache, contacts = File.read(Nagios3.contacts_path), []
           object_cache.scan(/define contact\s*\{(.*?)\}/m) do |match| 
             contacts << parse($1)
           end
           contacts
         end
         
-        def find_by_contact_name(name)
-          objects, contact = File.read(Nagios3.object_path), nil
-          if objects.match /define contact\s*\{(\s*contact_name\s*#{self.name}(.*?))\}/m
+        def find_by_id(id)
+          objects, contact = File.read(Nagios3.contacts_path), nil
+          if objects.match(object_regexp(id))
             contact = parse($1)
           end
           contact

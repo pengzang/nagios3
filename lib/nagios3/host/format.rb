@@ -8,25 +8,10 @@
 module Nagios3
   class Host
     module Format
-      
-      # define host {
-      #   use               generic-host
-      #   host_name         im-cmts
-      #   alias             im-cmts
-      #   address           192.168.104.1
-      #   hostgroups        servers
-      #   contacts          brian
-      #   contactgroups     administrators
-      #   first_notification_delay  15
-      #   notification_interval 15
-      #   notification_period 24x7
-      #   notification_options  d,u,r,f,s
-      #   _ID               1
-      #   _SNMPVERSION      1
-      #   _SNMPCOMMUNITY    PLBB
-      # }
+
       def to_config
         config = "define host {\n"
+        config << "\t_ID #{self.id}\n"
         config << "\thost_name #{self.host_name}\n"
         config << "\tuse #{self.use}\n"
         config << "\talias #{self.alias}\n"
@@ -38,7 +23,6 @@ module Nagios3
         config << "\tnotification_interval #{self.notification_interval}\n"
         config << "\tnotification_period #{self.notification_period}\n"
         config << "\tnotification_options #{self.notification_options}\n"
-        config << "\t_ID #{self.id}\n"
         config << "\t_SNMPVERSION #{self.snmp_version}\n"
         config << "\t_SNMPCOMMUNITY #{self.snmp_community}\n"
         config << "}\n"
