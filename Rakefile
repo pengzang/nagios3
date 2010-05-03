@@ -6,8 +6,8 @@ require 'nagios3/version'
 
 # RSpec tasks
 desc 'Run examples'
-task :rspec do
-  system "cd spec && rspec *_spec.rb"
+task :spec do
+  system "cd spec && spec *_spec.rb"
 end
 
 # RubyGem tasks
@@ -21,9 +21,9 @@ task :install => :build do
   system "gem install nagios3-#{Nagios3::VERSION}"
 end
 
-desc 'Push the gem to gemcutter'
-task :release => :build do
-  system "gem push nagios3-#{Nagios3::VERSION}"
-end
+# desc 'Push the gem to gemcutter'
+# task :release => :build do
+#   system "gem push nagios3-#{Nagios3::VERSION}"
+# end
 
-task :default => :rspec
+task :default => :spec
