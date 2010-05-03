@@ -1,0 +1,17 @@
+development:
+  hosts_path: /etc/nagios3/conf.d/hosts.cfg
+  services_path: /etc/nagios3/conf.d/services.cfg 
+  contacts_path: /etc/nagios3/conf.d/contacts.cfg
+  object_path: /var/cache/nagios3/objects.cache
+  status_path: /var/cache/nagios3/status.dat
+  log_path: /var/log/nagios3/nagios.log
+  command_file: /var/lib/nagios3/rw/nagios.cmd
+  
+production:
+  hosts_path: /etc/nagios3/conf.d/hosts.cfg
+  services_path: /etc/nagios3/conf.d/services.cfg 
+  contacts_path: /etc/nagios3/conf.d/contacts.cfg
+  object_path: /var/cache/nagios3/objects.cache
+  status_path: /var/cache/nagios3/status.dat
+  log_path: /var/log/nagios3/nagios.log
+  command_file: /var/lib/nagios3/rw/nagios.cmd
