@@ -12,6 +12,8 @@ module Nagios3
   autoload :Service,            'nagios3/service'
   autoload :ServiceEscalation,  'nagios3/service_escalation'
   autoload :TimePeriod,         'nagios3/time_period'
+  autoload :HostProcessor,      'nagios3/host_processor'
+  autoload :ServiceProcessor,   'nagios3/service_processor'
   
   class << self
     attr_accessor :hosts_path, :services_path, :contacts_path
@@ -20,6 +22,9 @@ module Nagios3
     
     attr_accessor :status_path, :object_path
     attr_accessor :host_perfdata_path, :service_perfdata_path
+    attr_accessor :host_perfdata_url, :service_perfdata_url
+    
+    attr_accessor :pid_file
     
     def configure(&blk)
       yield(self)  
