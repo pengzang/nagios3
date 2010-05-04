@@ -26,7 +26,7 @@ module Nagios3
       }.merge(params)
       
       options.each do |key, value|
-        method = (key.to_s << "=").to_sym
+        method = (key.to_s + "=").to_sym
         if self.respond_to?(method)
           self.send(method, value)
         end
