@@ -47,7 +47,7 @@ if defined? Rails
   Nagios3.configure do |c|
     c.hosts_path = conf['hosts_path']
     c.services_path = conf['services_path']
-    c.contacts_path = contact['contacts_path']
+    c.contacts_path = conf['contacts_path']
     c.host_escalations_path = conf['host_escalations_path']
     c.service_escalations_path = conf['service_escalations_path']
     c.time_periods_path = conf['time_periods_path']
