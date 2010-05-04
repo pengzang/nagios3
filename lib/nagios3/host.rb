@@ -19,7 +19,7 @@ module Nagios3
     def initialize(params = {})
       options = {
         :use => 'generic-host',
-        :first_notification_delaye => 5,
+        :first_notification_delay => 5,
         :notification_interval => 15,
         :notification_period => "24x7",
         :notification_options => "d,u,r,f,s"
