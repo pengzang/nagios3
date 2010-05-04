@@ -16,7 +16,7 @@ module Nagios3
         config << "\tservice_description #{self.description}\n"
         config << "\tuse #{self.use}\n"
         config << "\tcheck_command #{self.check_command}\n"
-        config << "\tcontacts #{self.contacts}\n"
+        config << "\tcontacts #{self.contacts}\n" if self.contacts
         config << "}\n"
       end
       

@@ -18,7 +18,11 @@ module Nagios3
     
     def initialize(params = {})
       options = {
-        :use => 'generic-host'
+        :use => 'generic-host',
+        :first_notification_delaye => 5,
+        :notification_interval => 15,
+        :notification_period => "24x7",
+        :notification_options => "d,u,r,f,s"
       }.merge(params)
       
       options.each do |key, value|

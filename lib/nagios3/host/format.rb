@@ -16,9 +16,9 @@ module Nagios3
         config << "\tuse #{self.use}\n"
         config << "\talias #{self.alias}\n"
         config << "\taddress #{self.address}\n"
-        config << "\thostgroups #{self.host_groups}\n"
-        config << "\tcontacts #{self.contacts}\n"
-        config << "\tcontactgroups #{self.contact_groups}\n"
+        config << "\thostgroups #{self.host_groups}\n" if self.host_groups
+        config << "\tcontacts #{self.contacts}\n" if self.contacts
+        config << "\tcontactgroups #{self.contact_groups}\n" if self.contact_groups
         config << "\tfirst_notification_delay #{self.first_notification_delay}\n"
         config << "\tnotification_interval #{self.notification_interval}\n"
         config << "\tnotification_period #{self.notification_period}\n"
