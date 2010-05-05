@@ -40,6 +40,14 @@ module Nagios3
         self
       end
       
+      def update_attributes(params)
+        params.each do |key, value|
+          method = (key.to_s + "=").to_sym
+          self.send(method, value) if self.respond_to?(method)
+        end
+        self.update
+      end
+      
       def destroy
         unless Nagios3::Host.configured?(self.id); raise HostNotFoundError; end
         new_config = File.read(Nagios3.hosts_path).gsub(
