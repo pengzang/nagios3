@@ -64,11 +64,11 @@ module Nagios3
     end
     
     def parse(line)
-      if line =~ /^\[SERVICEPERFDATA\]([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)$/
+      if line =~ /^\[SERVICEPERFDATA\]([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)$/
         perf_hash = { 
-          :time => $1, :id => $2, :host => $3, :service => $4,
-          :execution_time => $5, :latency => $6, :output => $7,
-          :perfdata => $8
+          :time => $1, :id => $2, :host => $3, :service => $4, :status => $5
+          :execution_time => $6, :latency => $7, :output => $8,
+          :perfdata => $9
         }
       end
     end
