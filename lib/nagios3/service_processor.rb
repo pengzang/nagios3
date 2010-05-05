@@ -40,7 +40,7 @@ module Nagios3
       entries = d.entries
       entries.delete_if { |entry| !(entry =~ /^service-perfdata\.\d+$/) }
       entries.map! { |entry| File.join(d.path, entry) }
-      entries
+      entries.sort
     end
     
     def send_data(perfdata)

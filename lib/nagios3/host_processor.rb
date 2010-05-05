@@ -40,7 +40,7 @@ module Nagios3
       entries = d.entries
       entries.delete_if { |entry| !(entry =~ /^host-perfdata\.\d+$/) }
       entries.map! { |entry| File.join(d.path, entry) }
-      entries
+      entries.sort
     end
     
     def remove_files
