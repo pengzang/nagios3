@@ -36,6 +36,12 @@ module Nagios3
     end
     
     def perfdata_files
+      d = Dir.new(File.dirname(Nagios3.service_perfdata_path))
+      entries = d.entries
+      entries.delete_if { |entry| !(entry =~ /^service-perfdata\.\d+$/) }
+      entries.map! { |entry| File.join(d.path, entry) }
+      entries
+    end
     
     def send_data(perfdata)
       uri = URI.parse(Nagios3.service_perfdata_url)

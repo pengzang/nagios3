@@ -36,7 +36,8 @@ module Nagios3
     end
     
     def perfdata_files
-      entries = Dir.new(File.dirname(Nagios3.host_perfdata_path)).entries
+      d = Dir.new(File.dirname(Nagios3.host_perfdata_path))
+      entries = d.entries
       entries.delete_if { |entry| !(entry =~ /^host-perfdata\.\d+$/) }
       entries.map! { |entry| File.join(d.path, entry) }
       entries
