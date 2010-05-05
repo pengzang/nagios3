@@ -8,7 +8,7 @@ module Nagios3
     def run
       rotate_file
       perfdata = parse_files
-      send_data
+      send_data(perfdata)
       remove_files
     end
     
