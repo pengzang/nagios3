@@ -40,7 +40,7 @@ module Nagios3
         self
       end
       
-      def update_attributes(params)
+      def update_attributes(params = {})
         params.each do |key, value|
           method = (key.to_s + "=").to_sym
           self.send(method, value) if self.respond_to?(method)
