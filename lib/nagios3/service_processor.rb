@@ -28,9 +28,8 @@ module Nagios3
     def parse_files
       d = Dir.new(File.dirname(Nagios3.service_perfdata_path))
       entries = d.entries
-      entries.delete_if { |entry| entry =~ /^\./ } # remove hidden files
-      entries.delete_if { |entry| entry =~ /[^\d]$/ } # leave current file
-      entries.map! { |entry| File.join(d.path, entyr) }
+      entries.delete_if { |entry| !(entry =~ /^service-perfdata\.\d+$/) }
+      entries.map! { |entry| File.join(d.path, entry) }
       
       perfdata = []
       entries.each do |entry|
