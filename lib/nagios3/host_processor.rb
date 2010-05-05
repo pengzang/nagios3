@@ -9,7 +9,6 @@ module Nagios3
       rotate_file
       perfdata = parse_files
       send_data(perfdata)
-      remove_files
     end
     
   private
