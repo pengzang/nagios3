@@ -9,6 +9,7 @@ module Nagios3
     def run
       rotate_file
       perfdata = parse_files
+      send_data
     end
     
   private
@@ -41,7 +42,7 @@ module Nagios3
     end
     
     def remove_files
-      FileUtils.rm_rf("#{Nagios3.host_perfdata_path}.*")
+      FileUtils.rm("#{Nagios3.host_perfdata_path}.*")
     end
     
     def send_data(perfdata)
@@ -68,6 +69,7 @@ module Nagios3
         }
       end
     end
+  
   end
   
 end

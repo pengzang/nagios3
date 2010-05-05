@@ -42,7 +42,7 @@ module Nagios3
     end
     
     def remove_files
-      FileUtils.rm_rf("#{Nagios3.service_perfdata_path}.*")
+      FileUtils.rm("#{Nagios3.service_perfdata_path}.*")
     end
     
     def send_data(perfdata)
