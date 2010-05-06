@@ -14,7 +14,7 @@ module Nagios3
     
   private
     def rotate_file
-      LogRotate.rotate_file(Nagios3.host_perfdata_path)
+      LogRotate.rotate_file(Nagios3.host_perfdata_path, {})
     end
     
     def parse_files
