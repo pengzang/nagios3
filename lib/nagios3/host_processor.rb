@@ -1,5 +1,4 @@
 require 'net/http'
-require 'logrotate'
 require 'json'
 
 module Nagios3
@@ -8,19 +7,16 @@ module Nagios3
     def run
       perfdata = parse_files
       send_data(perfdata)
-      remove_files
     end
     
   private
-    def rotate_file
-      LogRotate.rotate_file(Nagios3.host_perfdata_path, {})
-    end
-    
     def parse_files
       entries, perfdata = perfdata_files, []
       entries.each do |entry|
-        File.open(entry) do |f|
-          f.each { |line| perfdata << parse(line) }
+        lines = File.readlines(entry)
+        File.open(entry, "w") # clear file
+        lines.each do |line|
+          perfdata << parse(line)
         end
       end
       perfdata
@@ -32,10 +28,6 @@ module Nagios3
       entries.delete_if { |entry| !(entry =~ /^host-perfdata/) }
       entries.map! { |entry| File.join(d.path, entry) }
       entries.sort
-    end
-    
-    def remove_files
-      perfdata_files.each { |entry| File.open(entry, "w") }
     end
     
     def send_data(perfdata)
