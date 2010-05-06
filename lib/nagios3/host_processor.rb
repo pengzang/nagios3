@@ -5,7 +5,7 @@ require 'json'
 module Nagios3
   
   class HostProcessor
-    def run=
+    def run
       perfdata = parse_files
       send_data(perfdata)
       remove_files
