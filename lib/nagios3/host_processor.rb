@@ -5,8 +5,7 @@ require 'json'
 module Nagios3
   
   class HostProcessor
-    def run
-      rotate_file
+    def run=
       perfdata = parse_files
       send_data(perfdata)
       remove_files
@@ -30,7 +29,7 @@ module Nagios3
     def perfdata_files
       d = Dir.new(File.dirname(Nagios3.host_perfdata_path))
       entries = d.entries
-      entries.delete_if { |entry| !(entry =~ /^host-perfdata\.\d+$/) }
+      entries.delete_if { |entry| !(entry =~ /^host-perfdata/) }
       entries.map! { |entry| File.join(d.path, entry) }
       entries.sort
     end
