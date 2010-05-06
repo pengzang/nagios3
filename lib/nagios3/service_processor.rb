@@ -51,7 +51,7 @@ module Nagios3
     end
     
     def remove_files
-      perfdata_files.each { |entry| File.delete(entry) }
+      perfdata_files.each { |entry| File.open(entry, "w") }
     end
     
     def parse(line)
