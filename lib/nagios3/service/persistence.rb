@@ -38,7 +38,7 @@ module Nagios3
       end
       
       def update
-        unless Nagios3::Service.configured?(self.id); raise HostNotFoundError; end
+        unless Nagios3::Service.configured?(self.id); raise ServiceNotFoundError; end
         new_config = File.read(Nagios3.services_path).gsub(
           self.class.object_regexp(self.id), self.to_config
         )
@@ -47,6 +47,7 @@ module Nagios3
       end
       
       def update_attributes(params = {})
+        unless Nagios3::Service.configured?(self.id); raise ServiceNotFoundError; end
         params.each do |key, value|
           method = (key.to_s + "=").to_sym
           self.send(method, value) if self.respond_to?(method)
