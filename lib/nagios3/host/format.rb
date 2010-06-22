@@ -16,6 +16,7 @@ module Nagios3
         config << "\tuse #{self.use}\n"
         config << "\talias #{self.alias}\n"
         config << "\taddress #{self.address}\n"
+        config << "\tparents #{self.parents}\n" if self.parents
         config << "\tcheck_command #{self.check_command}\n" if self.check_command
         config << "\thostgroups #{self.host_groups}\n" if self.host_groups
         config << "\tcontacts #{self.contacts}\n" if self.contacts
