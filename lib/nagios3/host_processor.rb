@@ -32,6 +32,7 @@ module Nagios3
     
     def send_data(perfdata)
       uri = URI.parse(Nagios3.host_perfdata_url)
+      # perfdata is an array...we should only send 50 records per HTTP request
       body = perfdata.to_json
       headers = {
         'Content-Type' => 'application/json',

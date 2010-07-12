@@ -78,7 +78,7 @@ module Nagios3
         end
         
         def object_regexp(id)
-          /define host\s*\{([^\{]*?_ID\s#{id}[^\}]*?)\}\s/m
+          /define host\s*\{([^\{]*?_ID\s#{id}\n[^\}]*?)\}\s/m
         end
         
       private
