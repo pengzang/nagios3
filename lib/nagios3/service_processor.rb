@@ -52,6 +52,10 @@ module Nagios3
       end
     end
     
+    def send_modems(modems)
+      
+    end
+    
     def parse(line)
       if line =~ /^\[SERVICEPERFDATA\]([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)$/
         perf_hash = { 

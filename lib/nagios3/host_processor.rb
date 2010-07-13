@@ -53,7 +53,7 @@ module Nagios3
       end
     end
     
-    def send_modems
+    def send_modems(modems)
       
     end
     
