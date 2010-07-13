@@ -5,21 +5,27 @@ module Nagios3
   
   class HostProcessor
     def run
-      perfdata = parse_files
+      perfdata, modems = parse_files
       send_data(perfdata)
+      send_modems(modems)
     end
     
   private
     def parse_files
-      entries, perfdata = perfdata_files, []
+      entries, perfdata, modems = perfdata_files, [], []
       entries.each do |entry|
         lines = File.readlines(entry)
         File.open(entry, "w") # clear file
         lines.each do |line|
-          perfdata << parse(line)
+          parsed_perfdata_line = parse(line)
+          if parsed_perfdata_line[:id] == "modem"
+            modems << parsed_perfdata_line
+          else
+            perfdata << parsed_perfdata_line
+          end
         end
       end
-      perfdata
+      [perfdata, modems]
     end
     
     def perfdata_files
@@ -45,6 +51,10 @@ module Nagios3
       timeout(10) do
         response = http.request(request, body)
       end
+    end
+    
+    def send_modems
+      
     end
     
     def parse(line)
