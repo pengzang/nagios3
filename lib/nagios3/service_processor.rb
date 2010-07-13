@@ -54,7 +54,7 @@ module Nagios3
     
     def send_modems(modems)
       modems.in_groups_of(100) do |batch|
-        push_request(Nagios3.modem_service_perfdata_url, body)
+        push_request(Nagios3.modem_service_perfdata_url, batch.to_json)
       end
     end
     
