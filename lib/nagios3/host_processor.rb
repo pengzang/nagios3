@@ -47,11 +47,11 @@ module Nagios3
       modems.each do |modem_hash|
         cable_modem = CableModem.find_by_mac_address(modem_hash[:host_name].upcase, :include => :cmts)
         if cable_modem
-          modem_hash[:cm_state] = c.status
-          modem_hash[:ip_address] = c.ip_address
-          modem_hash[:cmts_address] = c.cmts.ip_address
-          modem_hash[:cmts_interface] = c.cmts_interface
-          modem_hash[:upstream_snr] = c.upstream_snr
+          modem_hash[:cm_state] = cable_modem.status
+          modem_hash[:ip_address] = cable_modem.ip_address
+          modem_hash[:cmts_address] = cable_modem.cmts.ip_address
+          modem_hash[:cmts_interface] = cable_modem.cmts_interface
+          modem_hash[:upstream_snr] = cable_modem.upstream_snr
         end
       end
     end
