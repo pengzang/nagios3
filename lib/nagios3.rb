@@ -62,8 +62,8 @@ require 'active_record'
 require 'active_support'
 
 ActiveRecord::Base.establish_connection(
-  :adapter => 'sqlite3'
-  :dbfile  => '/data/apps/monitor/current/db/production.sqlite3'
+  :adapter => 'sqlite3',
+  :database  => '/data/apps/monitor/current/db/production.sqlite3'
 )
 
 class CableModem < ActiveRecord::Base
