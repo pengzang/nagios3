@@ -38,7 +38,7 @@ module Nagios3
     end
     
     def send_data(perfdata)
-      perfdata.in_groups_of(50) do |batch|
+      perfdata.in_groups_of(50, false) do |batch|
         push_request(Nagios3.host_perfdata_url, batch.to_json)
       end
     end
@@ -47,7 +47,7 @@ module Nagios3
       # TODO
       # Access the cable modem database table and retrieve the current
       # status, CMTS address, CMTS interface, and IP address of the modem.
-      modems.in_groups_of(50) do |batch|
+      modems.in_groups_of(50, false) do |batch|
         push_request(Nagios3.modem_host_perfdata_url, batch.to_json)
       end
     end

@@ -38,7 +38,7 @@ module Nagios3
     end
     
     def send_data(perfdata)
-      perfdata.in_groups_of(50) do |batch|
+      perfdata.in_groups_of(50, false) do |batch|
         push_request(Nagios3.service_perfdata_url, batch.to_json)
       end
     end
@@ -47,7 +47,7 @@ module Nagios3
       # TODO
       # Access the cable modem database table and retrieve the current
       # upstream SNR for the modems.
-      modems.in_groups_of(100) do |batch|
+      modems.in_groups_of(100, false) do |batch|
         push_request(Nagios3.modem_service_perfdata_url, batch.to_json)
       end
     end
