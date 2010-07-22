@@ -44,13 +44,14 @@ module Nagios3
     end
     
     def decorate_modems!(modems)
-      modems.each do |modem|
-        c = CableModem.find_by_mac_address(modem[:host_name].upcase, :include => :cmts)
-        if c
-          modem[:cm_state] = c.status
-          modem[:ip_address] = c.ip_address
-          modem[:cmts_address] = c.cmts.ip_address
-          modem[:cmts_interface] = c.cmts_interface
+      modems.each do |modem_hash|
+        cable_modem = CableModem.find_by_mac_address(modem[:host_name].upcase, :include => :cmts)
+        if cable_modem
+          modem_hash[:cm_state] = c.status
+          modem_hash[:ip_address] = c.ip_address
+          modem_hash[:cmts_address] = c.cmts.ip_address
+          modem_hash[:cmts_interface] = c.cmts_interface
+          modem_hash[:upstream_snr] = c.upstream_snr
         end
       end
     end
