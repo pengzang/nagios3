@@ -1,6 +1,5 @@
 require 'net/http'
 require 'json'
-require 'active_support'
 
 module Nagios3
   
@@ -8,6 +7,7 @@ module Nagios3
     def run
       perfdata, modems = parse_files
       send_data(perfdata)
+      decorate_modems!(modems)
       send_modems(modems)
     end
     
@@ -43,10 +43,19 @@ module Nagios3
       end
     end
     
+    def decorate_modems!(modems)
+      modems.each do |modem|
+        c = CableModem.find_by_mac_address(modem[:host_name].upcase, :include => :cmts)
+        if c
+          modem[:cm_state] = c.status
+          modem[:ip_address] = c.ip_address
+          modem[:cmts_address] = c.cmts.ip_address
+          modem[:cmts_interface] = c.cmts_interface
+        end
+      end
+    end
+    
     def send_modems(modems)
-      # TODO
-      # Access the cable modem database table and retrieve the current
-      # status, CMTS address, CMTS interface, and IP address of the modem.
       modems.in_groups_of(50, false) do |batch|
         push_request(Nagios3.modem_host_perfdata_url, batch.to_json)
       end

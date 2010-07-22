@@ -57,3 +57,18 @@ if defined? Rails
     c.object_path = conf['object_path']
   end
 end
+
+require 'active_record'
+require 'active_support'
+
+ActiveRecord::Base.establish_connection(
+  :adapter => 'sqlite3'
+  :dbfile  => '/data/apps/monitor/current/db/production.sqlite3'
+)
+
+class CableModem < ActiveRecord::Base
+  belongs_to :cmts, :foreign_key => "cable_modem_termination_system_id", :class_name => "CableModemTerminationSystem"
+end
+
+class CableModemTerminationSystem < ActiveRecord::Base
+end
