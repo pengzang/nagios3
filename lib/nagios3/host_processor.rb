@@ -50,7 +50,8 @@ module Nagios3
           modem_hash[:cm_state] = cable_modem.status
           modem_hash[:ip_address] = cable_modem.ip_address
           modem_hash[:cmts_address] = cable_modem.cmts.ip_address
-          modem_hash[:cmts_interface] = cable_modem.cmts_interface
+          modem_hash[:upstream_interface] = cable_modem.upstream_interface
+          modem_hash[:downstream_interface] = cable_modem.downstream_interface
           modem_hash[:upstream_snr] = cable_modem.upstream_snr
         end
       end
