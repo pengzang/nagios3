@@ -1,5 +1,6 @@
 require 'net/http'
 require 'json'
+require 'active_support'
 
 module Nagios3
   
@@ -37,22 +38,15 @@ module Nagios3
     end
     
     def send_data(perfdata)
-      uri = URI.parse(Nagios3.service_perfdata_url)
-      body = perfdata.to_json
-      headers = {
-        'Content-Type' => 'application/json',
-        'Content-Length' => body.size.to_s
-      }
-      
-      request = Net::HTTP::Post.new(uri.path, headers)
-      http = Net::HTTP.new(uri.host, uri.port)
-      
-      timeout(10) do
-        response = http.request(request, body)
+      perfdata.in_groups_of(50) do |batch|
+        push_request(Nagios3.service_perfdata_url, batch.to_json)
       end
     end
     
     def send_modems(modems)
+      # TODO
+      # Access the cable modem database table and retrieve the current
+      # upstream SNR for the modems.
       modems.in_groups_of(100) do |batch|
         push_request(Nagios3.modem_service_perfdata_url, batch.to_json)
       end
