@@ -62,8 +62,14 @@ require 'active_record'
 require 'active_support'
 
 ActiveRecord::Base.establish_connection(
-  :adapter => 'sqlite3',
-  :database  => '/data/apps/monitor/current/db/production.sqlite3'
+  :adapter => 'mysql',
+  :encoding => "utf8",
+  :host => "127.0.0.1",
+  :reconnect => false,
+  :database  => 'monitor_production',
+  :pool => 5,
+  :username => "root",
+  :password => "mb723wk8"
 )
 
 class CableModem < ActiveRecord::Base
