@@ -18,9 +18,11 @@ module Nagios3
         config << "\taddress #{self.address}\n"
         config << "\tparents #{self.parents}\n" if self.parents
         config << "\tcheck_command #{self.check_command}\n" if self.check_command
+        config << "\tcheck_interval #{self.check_interval}\n" if self.check_interval
         config << "\thostgroups #{self.host_groups}\n" if self.host_groups
         config << "\tcontacts #{self.contacts}\n" if self.contacts
         config << "\tcontactgroups #{self.contact_groups}\n" if self.contact_groups
+        config << "\tnotifications_enabled #{self.notifications_enabled}\n" if self.notifications_enabled
         config << "\tfirst_notification_delay #{self.first_notification_delay}\n"
         config << "\tnotification_interval #{self.notification_interval}\n"
         config << "\tnotification_period #{self.notification_period}\n"
@@ -29,15 +31,15 @@ module Nagios3
         config << "\t_SNMPCOMMUNITY #{self.snmp_community}\n"
         config << "}\n"
       end
-      
+
       def to_hash
         hash = {}
         [:name, :host_name, :alias, :address, :use, :register, :notifications_enabled].each do |field|
-          hash[field] = self.send(field) 
+          hash[field] = self.send(field)
         end
         hash
       end
-      
+
       def to_s
         host = "\n"
         host << "Name: #{@name}\n" unless @name.nil?
@@ -50,7 +52,7 @@ module Nagios3
         host << "Current State: #{current_state}\n" if @register
         host
       end
-      
+
     end
   end
 end
