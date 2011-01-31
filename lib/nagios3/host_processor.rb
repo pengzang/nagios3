@@ -2,7 +2,7 @@ require 'net/http'
 require 'json'
 
 module Nagios3
-  
+
   class HostProcessor
     def run
       perfdata, modems = parse_files
@@ -10,7 +10,7 @@ module Nagios3
       decorate_modems!(modems)
       send_modems(modems)
     end
-    
+
   private
     def parse_files
       entries, perfdata, modems = perfdata_files, [], []
@@ -28,7 +28,7 @@ module Nagios3
       end
       [perfdata, modems]
     end
-    
+
     def perfdata_files
       d = Dir.new(File.dirname(Nagios3.host_perfdata_path))
       entries = d.entries
@@ -36,13 +36,13 @@ module Nagios3
       entries.map! { |entry| File.join(d.path, entry) }
       entries.sort
     end
-    
+
     def send_data(perfdata)
       perfdata.in_groups_of(50, false) do |batch|
         push_request(Nagios3.host_perfdata_url, batch.to_json)
       end
     end
-    
+
     def decorate_modems!(modems)
       modems.each do |modem_hash|
         cable_modem = CableModem.find_by_mac_address(modem_hash[:host_name].upcase, :include => :cmts)
@@ -53,16 +53,19 @@ module Nagios3
           modem_hash[:upstream_interface] = cable_modem.upstream_interface
           modem_hash[:downstream_interface] = cable_modem.downstream_interface
           modem_hash[:upstream_snr] = cable_modem.upstream_snr
+          modem_hash[:upstream_power] = cable_modem.upstream_power
+          modem_hash[:downstream_snr] = cable_modem.downstream_snr
+          modem_hash[:downstream_power] = cable_modem.downstream_power
         end
       end
     end
-    
+
     def send_modems(modems)
       modems.in_groups_of(50, false) do |batch|
         push_request(Nagios3.modem_host_perfdata_url, batch.to_json)
       end
     end
-    
+
     def push_request(url, body)
       uri = URI.parse(url)
       headers = {
@@ -75,16 +78,16 @@ module Nagios3
         response = http.request(request, body)
       end
     end
-    
+
     def parse(line)
       if line =~ /^\[HOSTPERFDATA\]([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)$/
         perf_hash = {
-          :time => $1, :id => $2, :host_name => $3, :status => $4, :duration => $5, 
+          :time => $1, :id => $2, :host_name => $3, :status => $4, :duration => $5,
           :execution_time => $6, :latency => $7, :output => $8, :perfdata => $9
         }
       end
     end
-  
+
   end
-  
+
 end
