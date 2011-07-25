@@ -11,11 +11,11 @@ require 'nagios3/host/format'
 
 module Nagios3
   class Host
-    
+
     include Nagios3::Host::Attributes
     include Nagios3::Host::Format
     include Nagios3::Host::Persistence
-    
+
     def initialize(params = {})
       options = {
         :use => 'generic-host',
@@ -24,7 +24,7 @@ module Nagios3
         :notification_period => "24x7",
         :notification_options => "d,u,r,f,s"
       }.merge(params)
-      
+
       options.each do |key, value|
         method = (key.to_s + "=").to_sym
         if self.respond_to?(method)
@@ -32,6 +32,6 @@ module Nagios3
         end
       end
     end
-    
+
   end
 end
