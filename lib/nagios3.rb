@@ -58,23 +58,23 @@ if defined? Rails
   end
 end
 
-require 'active_record'
-require 'active_support'
-
-ActiveRecord::Base.establish_connection(
-  :adapter => 'mysql',
-  :encoding => "utf8",
-  :host => "127.0.0.1",
-  :reconnect => false,
-  :database  => 'monitor_production',
-  :pool => 5,
-  :username => "root",
-  :password => "mb723wk8"
-)
-
-class CableModem < ActiveRecord::Base
-  belongs_to :cmts, :foreign_key => "cable_modem_termination_system_id", :class_name => "CableModemTerminationSystem"
-end
-
-class CableModemTerminationSystem < ActiveRecord::Base
-end
+# require 'active_record'
+# require 'active_support'
+#
+# ActiveRecord::Base.establish_connection(
+#   :adapter => 'mysql',
+#   :encoding => "utf8",
+#   :host => "127.0.0.1",
+#   :reconnect => false,
+#   :database  => 'monitor_production',
+#   :pool => 5,
+#   :username => "root",
+#   :password => "mb723wk8"
+# )
+#
+# class CableModem < ActiveRecord::Base
+#   belongs_to :cmts, :foreign_key => "cable_modem_termination_system_id", :class_name => "CableModemTerminationSystem"
+# end
+#
+# class CableModemTerminationSystem < ActiveRecord::Base
+# end
