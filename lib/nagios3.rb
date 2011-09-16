@@ -62,14 +62,12 @@ require 'active_record'
 require 'active_support'
 
 ActiveRecord::Base.establish_connection(
-  :adapter => 'mysql',
-  :encoding => "utf8",
-  :host => "127.0.0.1",
-  :reconnect => false,
-  :database  => 'monitor_production',
+  :adapter => 'postgresql',
+  :encoding => "unicode",
+  :database  => 'probe_production',
   :pool => 5,
-  :username => "root",
-  :password => "mb723wk8"
+  :username => "ccisystems",
+  :password => nil
 )
 
 class CableModem < ActiveRecord::Base
