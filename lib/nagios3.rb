@@ -44,6 +44,8 @@ module Nagios3
 end
 
 if defined? Rails
+  puts "Rails found"
+  puts Rails.env
   conf = YAML::load_file("#{Rails.root}/config/nagios3.yml")[Rails.env]
 
   Nagios3.configure do |c|
