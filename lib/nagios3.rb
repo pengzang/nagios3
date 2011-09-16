@@ -44,37 +44,37 @@ module Nagios3
 end
 
 if defined? Rails
-  # conf = YAML::load_file("#{Rails.root}/config/nagios3.yml")[Rails.env]
-  #
-  # Nagios3.configure do |c|
-  #   c.hosts_path = conf['hosts_path']
-  #   c.services_path = conf['services_path']
-  #   c.contacts_path = conf['contacts_path']
-  #   c.host_escalations_path = conf['host_escalations_path']
-  #   c.service_escalations_path = conf['service_escalations_path']
-  #   c.time_periods_path = conf['time_periods_path']
-  #   c.status_path = conf['status_path']
-  #   c.object_path = conf['object_path']
-  # end
+  conf = YAML::load_file("#{Rails.root}/config/nagios3.yml")[Rails.env]
+
+  Nagios3.configure do |c|
+    c.hosts_path = conf['hosts_path']
+    c.services_path = conf['services_path']
+    c.contacts_path = conf['contacts_path']
+    c.host_escalations_path = conf['host_escalations_path']
+    c.service_escalations_path = conf['service_escalations_path']
+    c.time_periods_path = conf['time_periods_path']
+    c.status_path = conf['status_path']
+    c.object_path = conf['object_path']
+  end
 end
 
-# require 'active_record'
-# require 'active_support'
-#
-# ActiveRecord::Base.establish_connection(
-#   :adapter => 'mysql',
-#   :encoding => "utf8",
-#   :host => "127.0.0.1",
-#   :reconnect => false,
-#   :database  => 'monitor_production',
-#   :pool => 5,
-#   :username => "root",
-#   :password => "mb723wk8"
-# )
-#
-# class CableModem < ActiveRecord::Base
-#   belongs_to :cmts, :foreign_key => "cable_modem_termination_system_id", :class_name => "CableModemTerminationSystem"
-# end
-#
-# class CableModemTerminationSystem < ActiveRecord::Base
-# end
+require 'active_record'
+require 'active_support'
+
+ActiveRecord::Base.establish_connection(
+  :adapter => 'mysql',
+  :encoding => "utf8",
+  :host => "127.0.0.1",
+  :reconnect => false,
+  :database  => 'monitor_production',
+  :pool => 5,
+  :username => "root",
+  :password => "mb723wk8"
+)
+
+class CableModem < ActiveRecord::Base
+  belongs_to :cmts, :foreign_key => "cable_modem_termination_system_id", :class_name => "CableModemTerminationSystem"
+end
+
+class CableModemTerminationSystem < ActiveRecord::Base
+end
