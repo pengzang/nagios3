@@ -46,6 +46,7 @@ end
 if defined? Rails
   puts "Rails found"
   puts Rails.env
+  puts Rails.root
   conf = YAML::load_file("#{Rails.root}/config/nagios3.yml")[Rails.env]
 
   Nagios3.configure do |c|
