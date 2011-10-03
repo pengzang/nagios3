@@ -46,8 +46,6 @@ end
 if defined? Rails
   class Nagios3::Railtie < Rails::Railtie
     config.before_configuration do
-      puts Rails.root
-      puts Rails.env
       conf = YAML::load_file("#{Rails.root}/config/nagios3.yml")[Rails.env]
       Nagios3.configure do |c|
         c.hosts_path = conf['hosts_path']
@@ -66,12 +64,10 @@ else
   require 'active_support'
 
   ActiveRecord::Base.establish_connection(
-    :adapter => 'postgresql',
-    :encoding => "unicode",
-    :database  => 'probe_production',
+    :adapter => 'sqlite3',
+    :database => '/data/apps/probe/shared/config/production.db',
     :pool => 5,
-    :username => "ccisystems",
-    :password => nil
+    :timeout => 5000
   )
 
   class CableModem < ActiveRecord::Base
