@@ -1,2 +1,2 @@
-rvm ruby-1.9.2-p290@rails3-1
+rvm ruby-1.9.2-p290@rails3-1 --create
 rvm_project_rvmrc_default=1

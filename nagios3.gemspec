@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "nagios3"
-  s.version = "0.5.2"
+  s.version = "0.5.3"
   s.summary = "Nagios3 management gem"
   
   s.authors = [ "Brian Reath" ]
