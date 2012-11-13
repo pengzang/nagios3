@@ -3,3 +3,4 @@ tmp/*.cfg
 tmp/*.dat
 tmp/*.cache
 *.gem
+.redcar/
