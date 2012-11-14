@@ -5,7 +5,8 @@ module Nagios3
   
   class ServiceProcessor
     def run
-      load_to_database(parse_files)
+      perfdata, modems = parse_files
+      load_to_database(perfdata, modems)
     end
     
     def send_noc
