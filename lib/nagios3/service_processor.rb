@@ -50,7 +50,7 @@ module Nagios3
       str = <<-SQL
         insert into host_service_perfdata values (DEFAULT, '#{Time.at(hash[:time].to_i)}','#{hash[:host_id]}',
         '#{hash[:host]}','#{hash[:service]}','#{hash[:status]}','#{hash[:duration]}','#{hash[:execution_time]}',
-        '#{hash[:latency]}','#{hash[:output]}','#{hash[:perfdata]}','#{DateTime.now}', null)
+        '#{hash[:latency]}','#{hash[:output]}','#{hash[:perfdata]}','#{DateTime.now}', null);
 SQL
     end
 
@@ -58,7 +58,7 @@ SQL
       str = <<-SQL
         insert into modem_service_perfdata values (DEFAULT, '#{Time.at(hash[:time].to_i)}','#{hash[:host_id]}',
         '#{hash[:host]}','#{hash[:service]}','#{hash[:status]}','#{hash[:duration]}','#{hash[:execution_time]}',
-        '#{hash[:latency]}','#{hash[:output]}','#{hash[:perfdata]}','#{DateTime.now}', null)
+        '#{hash[:latency]}','#{hash[:output]}','#{hash[:perfdata]}','#{DateTime.now}', null);
 SQL
     end
 
