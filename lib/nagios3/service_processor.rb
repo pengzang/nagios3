@@ -2,13 +2,13 @@ require 'net/http'
 require 'json'
 
 module Nagios3
-  
+
   class ServiceProcessor
     def run
       perfdata, modems = parse_files
       load_to_database(perfdata, modems)
     end
-    
+
     def send_noc
       perfdata, modems = get_from_database
       send_data(perfdata)
@@ -17,7 +17,7 @@ module Nagios3
       mark_modems(modems)
       delete_old_data
     end
-    
+
   private
     def parse_files
       entries, perfdata, modems = perfdata_files, [], []
@@ -35,10 +35,15 @@ module Nagios3
       end
       [perfdata, modems]
     end
-    
+
     def load_to_database(perfdata,modems)
-      run_sql(perfdata_sql(perfdata))
-      run_sql(modem_sql(modems))
+      perfdata.each do |p|
+        run_sql(perfdata_sql(p))
+      end
+
+      modems.each do |m|
+        run_sql(modem_sql(m))
+      end
     end
 
     def perfdata_sql(hash)
@@ -48,7 +53,7 @@ module Nagios3
         '#{hash[:latency]}','#{hash[:output]}','#{hash[:perfdata]}','#{DateTime.now}', null)
 SQL
     end
-    
+
     def modem_sql(hash)
       str = <<-SQL
         insert into modem_service_perfdata values (DEFAULT, '#{Time.at(hash[:time].to_i)}','#{hash[:host_id]}',
@@ -56,7 +61,7 @@ SQL
         '#{hash[:latency]}','#{hash[:output]}','#{hash[:perfdata]}','#{DateTime.now}', null)
 SQL
     end
-    
+
     def perfdata_files
       d = Dir.new(File.dirname(Nagios3.service_perfdata_path))
       entries = d.entries
@@ -64,13 +69,13 @@ SQL
       entries.map! { |entry| File.join(d.path, entry) }
       entries.sort
     end
-    
+
     def get_from_database
       host_sql = "select * from host_service_perfdata where sent_at is null"
       modem_sql = "select * from modem_service_perfdata where sent_at is null"
       result = [parse_sql_table(host_sql), parse_sql_table(modem_sql)]
     end
-    
+
     def parse_sql_table(sql)
       tbl = run_sql(sql)
       rows = tbl.split("\n")[2..-2]
@@ -89,7 +94,7 @@ SQL
       end
       result
     end
-    
+
     def mark_data(perfdata)
       if perfdata.count > 0
         ids = perfdata.inject([]){|sum, h| sum << h[:table_id]}.to_s.gsub!(/[\[\]]/,"")
@@ -97,7 +102,7 @@ SQL
         run_sql(sql)
       end
     end
-    
+
     def mark_modems(modems)
       if modems.count > 0
         ids = modems.inject([]){|sum, h| sum << h[:table_id]}.to_s.gsub!(/[\[\]]/,"")
@@ -105,21 +110,21 @@ SQL
         run_sql(sql)
       end
     end
-    
+
     def send_data(perfdata)
       perfdata.in_groups_of(50, false) do |batch|
         push_request(Nagios3.service_perfdata_url, batch.to_json)
         mark_data(perfdata)
       end
     end
-        
+
     def send_modems(modems)
       modems.in_groups_of(100, false) do |batch|
         push_request(Nagios3.modem_service_perfdata_url, batch.to_json)
         mark_modems(modems)
       end
     end
-    
+
     def push_request(url, body)
       uri = URI.parse(url)
       headers = {
@@ -132,14 +137,14 @@ SQL
         response = http.request(request, body)
       end
     end
-    
+
     def delete_old_data
       sql = "delete from host_service_perfdata where created_at < '#{DateTime.now-1.day}'"
       run_sql(sql)
       sql = "delete from modem_service_perfdata where created_at < '#{DateTime.now-1.day}'"
       run_sql(sql)
     end
-    
+
     def parse(line)
       if line =~ /^\[SERVICEPERFDATA\]([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)$/
         perf_hash = {
@@ -149,10 +154,10 @@ SQL
         }
       end
     end
-    
+
     def run_sql(sql)
       `/usr/local/pgsql/bin/psql probe_production ccisystems -c '#{sql}'`
     end
   end
-  
+
 end
