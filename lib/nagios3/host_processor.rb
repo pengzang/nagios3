@@ -174,6 +174,7 @@ SQL
     end
 
     def run_sql(sql)
+      sql.gsub!("\n", " ")
       `/usr/local/pgsql/bin/psql probe_production ccisystems -c "#{sql}"`
     end
 
