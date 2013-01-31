@@ -49,14 +49,14 @@ module Nagios3
     def perfdata_sql(hash)
       str = <<-SQL
         insert into host_perfdata values (DEFAULT, '#{Time.at(hash[:time].to_i)}','#{hash[:id]}','#{hash[:host_name]}','#{hash[:status]}',
-        '#{hash[:duration]}','#{hash[:execution_time]}','#{hash[:latency]}','#{hash[:output]}','#{hash[:perfdata]}','#{DateTime.now}')
+        #{hash[:duration]},'#{hash[:execution_time]}','#{hash[:latency]}','#{hash[:output]}','#{hash[:perfdata]}','#{DateTime.now.strftime("%Y-%m-%d %H:%M:%S")}')
 SQL
     end
 
     def modem_sql(hash)
       str = <<-SQL
         insert into modem_perfdata values (DEFAULT, '#{Time.at(hash[:time].to_i)}','#{hash[:host_name]}','#{hash[:status]}',
-        '#{hash[:duration]}','#{hash[:execution_time]}','#{hash[:latency]}','#{hash[:output]}','#{hash[:perfdata]}')
+        #{hash[:duration]},'#{hash[:execution_time]}','#{hash[:latency]}','#{hash[:output]}','#{hash[:perfdata]}','#{DateTime.now.strftime("%Y-%m-%d %H:%M:%S")}')
 SQL
 
     end
@@ -110,7 +110,7 @@ SQL
         if cable_modem
           modem_hash[:cm_state] = cable_modem.status
           modem_hash[:ip_address] = cable_modem.ip_address
-          modem_hash[:cmts_address] = cable_modem.cmts.ip_address
+          modem_hash[:cmts_address] = cable_modem.cmts.try(:ip_address)
           modem_hash[:upstream_interface] = cable_modem.upstream_interface
           modem_hash[:downstream_interface] = cable_modem.downstream_interface
           modem_hash[:upstream_snr] = cable_modem.upstream_snr
@@ -158,9 +158,9 @@ SQL
     end
 
     def delete_old_data
-      sql = "delete from host_perfdata where created_at < '#{DateTime.now-1.day}'"
+      sql = "delete from host_perfdata where created_at < '#{(DateTime.now-1.day).strftime("%Y-%m-%d %H:%M:%S")}'"
       run_sql(sql)
-      sql = "delete from modem_perfdata where created_at < '#{DateTime.now-1.day}'"
+      sql = "delete from modem_perfdata where created_at < '#{(DateTime.now-1.day).strftime("%Y-%m-%d %H:%M:%S")}'"
       run_sql(sql)
     end
 

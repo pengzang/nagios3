@@ -40,7 +40,6 @@ module Nagios3
       perfdata.each do |p|
         run_sql(perfdata_sql(p))
       end
-
       modems.each do |m|
         run_sql(modem_sql(m))
       end
@@ -48,17 +47,17 @@ module Nagios3
 
     def perfdata_sql(hash)
       str = <<-SQL
-        insert into host_service_perfdata values (DEFAULT, '#{Time.at(hash[:time].to_i)}','#{hash[:host_id]}',
+        insert into host_service_perfdata values (DEFAULT, '#{Time.at(hash[:time].to_i)}',#{hash[:host_id] || "NULL"},
         '#{hash[:host]}','#{hash[:service]}','#{hash[:status]}','#{hash[:duration]}','#{hash[:execution_time]}',
-        '#{hash[:latency]}','#{hash[:output]}','#{hash[:perfdata]}','#{DateTime.now}', null);
+        '#{hash[:latency]}','#{hash[:output]}','#{hash[:perfdata]}','#{DateTime.now.strftime("%Y-%m-%d %H:%M:%S")}', null)
 SQL
     end
 
     def modem_sql(hash)
       str = <<-SQL
-        insert into modem_service_perfdata values (DEFAULT, '#{Time.at(hash[:time].to_i)}','#{hash[:host_id]}',
+        insert into modem_service_perfdata values (DEFAULT, '#{Time.at(hash[:time].to_i)}',#{hash[:host_id] || "NULL"},
         '#{hash[:host]}','#{hash[:service]}','#{hash[:status]}','#{hash[:duration]}','#{hash[:execution_time]}',
-        '#{hash[:latency]}','#{hash[:output]}','#{hash[:perfdata]}','#{DateTime.now}', null);
+        '#{hash[:latency]}','#{hash[:output]}','#{hash[:perfdata]}','#{DateTime.now.strftime("%Y-%m-%d %H:%M:%S")}', null)
 SQL
     end
 
@@ -98,7 +97,7 @@ SQL
     def mark_data(perfdata)
       if perfdata.count > 0
         ids = perfdata.inject([]){|sum, h| sum << h[:table_id]}.to_s.gsub!(/[\[\]]/,"")
-        sql = "update host_service_perfdata set sent_at = ''#{DateTime.now}' where id in (#{ids})"
+        sql = "update host_service_perfdata set sent_at = ''#{DateTime.now.strftime("%Y-%m-%d %H:%M:%S")}' where id in (#{ids})"
         run_sql(sql)
       end
     end
@@ -106,7 +105,7 @@ SQL
     def mark_modems(modems)
       if modems.count > 0
         ids = modems.inject([]){|sum, h| sum << h[:table_id]}.to_s.gsub!(/[\[\]]/,"")
-        sql = "update modem_service_perfdata set sent_at = ''#{DateTime.now}' where id in (#{ids})"
+        sql = "update modem_service_perfdata set sent_at = ''#{DateTime.now.strftime("%Y-%m-%d %H:%M:%S")}' where id in (#{ids})"
         run_sql(sql)
       end
     end
@@ -139,9 +138,9 @@ SQL
     end
 
     def delete_old_data
-      sql = "delete from host_service_perfdata where created_at < '#{DateTime.now-1.day}'"
+      sql = "delete from host_service_perfdata where created_at < '#{(DateTime.now-1.day).strftime("%Y-%m-%d %H:%M:%S")}'"
       run_sql(sql)
-      sql = "delete from modem_service_perfdata where created_at < '#{DateTime.now-1.day}'"
+      sql = "delete from modem_service_perfdata where created_at < '#{(DateTime.now-1.day).strftime("%Y-%m-%d %H:%M:%S")}'"
       run_sql(sql)
     end
 
