@@ -80,7 +80,8 @@ SQL
       rows = tbl.split("\n")[2..-2]
       columns = tbl.split("\n")[0].split("|").each{|c|c.strip!}
       columns[columns.index("id")] = "table_id"
-      columns[columns.index("host_id")] = "id"
+      columns[columns.index("host")] = "host_id"
+      columns[columns.index("service")] = "id"
       result = []
       rows.each do |r|
         row = {}
