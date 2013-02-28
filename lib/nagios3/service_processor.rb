@@ -72,7 +72,7 @@ SQL
     def get_from_database
       host_sql = "select id, EXTRACT(EPOCH FROM time)::int AS time, host_id, host, service, status, duration, execution_time, latency, output, perfdata, created_at, sent_at from host_service_perfdata where sent_at is null;"
       modem_sql = "select id, EXTRACT(EPOCH from time)::int AS time, host_id, host, service, status, duration, execution_time,  latency, output, perfdata, created_at, sent_at from modem_service_perfdata where sent_at is null;"
-      result = [parse_sql_table(host_sql), parse_sql_table(modem_sql)]
+      result = [parse_sql_table(host_sql), parse_modem_sql_table(modem_sql)]
     end
 
     def parse_sql_table(sql)
@@ -81,6 +81,25 @@ SQL
       columns = tbl.split("\n")[0].split("|").each{|c|c.strip!}
       columns[columns.index("id")] = "table_id"
       columns[columns.index("host")] = "host_id"
+      columns[columns.index("service")] = "id"
+      result = []
+      rows.each do |r|
+        row = {}
+        r.split("|").each_with_index do |v, i|
+          row[columns[i].to_sym] = v.strip
+        end
+        if r =~ /[\w\d]+/
+          result << row
+        end
+      end
+      result
+    end
+
+    def parse_modem_sql_table(sql)
+      tbl = run_sql(sql)
+      rows = tbl.split("\n")[2..-2]
+      columns = tbl.split("\n")[0].split("|").each{|c|c.strip!}
+      columns[columns.index("id")] = "table_id"
       columns[columns.index("service")] = "id"
       result = []
       rows.each do |r|
