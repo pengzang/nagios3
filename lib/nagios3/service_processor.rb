@@ -97,7 +97,7 @@ SQL
     def mark_data(perfdata)
       if perfdata.count > 0
         ids = perfdata.inject([]){|sum, h| sum << h[:table_id]}.to_s.gsub!(/[\[\]]/,"")
-        sql = "update host_service_perfdata set sent_at = ''#{DateTime.now.strftime("%Y-%m-%d %H:%M:%S")}' where id in (#{ids})"
+        sql = "update host_service_perfdata set sent_at = '#{DateTime.now.strftime("%Y-%m-%d %H:%M:%S")}' where id in (#{ids})"
         run_sql(sql)
       end
     end
@@ -105,7 +105,7 @@ SQL
     def mark_modems(modems)
       if modems.count > 0
         ids = modems.inject([]){|sum, h| sum << h[:table_id]}.to_s.gsub!(/[\[\]]/,"")
-        sql = "update modem_service_perfdata set sent_at = ''#{DateTime.now.strftime("%Y-%m-%d %H:%M:%S")}' where id in (#{ids})"
+        sql = "update modem_service_perfdata set sent_at = '#{DateTime.now.strftime("%Y-%m-%d %H:%M:%S")}' where id in (#{ids})"
         run_sql(sql)
       end
     end
@@ -156,7 +156,7 @@ SQL
 
     def run_sql(sql)
       sql.gsub!("\n", " ")
-      `/usr/local/pgsql/bin/psql probe_production ccisystems -c '#{sql}'`
+      `/usr/local/pgsql/bin/psql probe_production ccisystems -c "#{sql}"`
     end
   end
 
