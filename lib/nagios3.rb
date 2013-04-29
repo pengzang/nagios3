@@ -25,6 +25,7 @@ module Nagios3
     attr_accessor :host_perfdata_url, :service_perfdata_url
 
     attr_accessor :modem_host_perfdata_url, :modem_service_perfdata_url
+    attr_accessor :gateway_host_perfdata_url
 
     attr_accessor :pid_file
 

@@ -5,15 +5,16 @@ module Nagios3
 
   class HostProcessor
     def run
-      perfdata, modems = parse_files
+      perfdata, modems, gateways = parse_files
       send_data(perfdata)
       decorate_modems!(modems)
       send_modems(modems)
+      send_gateways(gateways)
     end
 
   private
     def parse_files
-      entries, perfdata, modems = perfdata_files, [], []
+      entries, perfdata, modems, gateways = perfdata_files, [], [], []
       entries.each do |entry|
         lines = File.readlines(entry)
         File.open(entry, "w") # clear file
@@ -21,12 +22,14 @@ module Nagios3
           parsed_perfdata_line = parse(line)
           if parsed_perfdata_line[:id] == "modem"
             modems << parsed_perfdata_line
+          elsif parsed_perfdata_line[:id] == "gateway"
+            gateways << parsed_perfdata_line
           else
             perfdata << parsed_perfdata_line
           end
         end
       end
-      [perfdata, modems]
+      [perfdata, modems, gateways]
     end
 
     def perfdata_files
@@ -63,6 +66,12 @@ module Nagios3
     def send_modems(modems)
       modems.in_groups_of(50, false) do |batch|
         push_request(Nagios3.modem_host_perfdata_url, batch.to_json)
+      end
+    end
+
+    def send_gateways(gateways)
+      modems.in_groups_of(50, false) do |batch|
+        push_request(Nagios3.gateway_host_perfdata_url, batch.to_json)
       end
     end
 
