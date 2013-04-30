@@ -9,6 +9,7 @@ module Nagios3
       send_data(perfdata)
       decorate_modems!(modems)
       send_modems(modems)
+      decorate_gateways!(gateways)
       send_gateways(gateways)
     end
 
@@ -66,6 +67,16 @@ module Nagios3
     def send_modems(modems)
       modems.in_groups_of(50, false) do |batch|
         push_request(Nagios3.modem_host_perfdata_url, batch.to_json)
+      end
+    end
+
+    def decorate_gateways!(gateways)
+      gateways.each do |gateway_hash|
+        gateway = TimeloxGateway.find_by_mac_address(gateway_hash[:host_name].upcase)
+        if gateway
+          gateway_hash[:ip_address] = gateway.ip_address
+          gateway_hash[:cmts_address] = gateway.cable_modem_termination_system.ip_address
+        end
       end
     end
 
