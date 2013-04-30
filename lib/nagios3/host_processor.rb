@@ -81,7 +81,7 @@ module Nagios3
     end
 
     def send_gateways(gateways)
-      modems.in_groups_of(50, false) do |batch|
+      gateways.in_groups_of(50, false) do |batch|
         push_request(Nagios3.gateway_host_perfdata_url, batch.to_json)
       end
     end
