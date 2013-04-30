@@ -77,4 +77,8 @@ else
 
   class CableModemTerminationSystem < ActiveRecord::Base
   end
+
+  class TimeloxGateway < ActiveRecord::Base
+    belongs_to :cable_modem_termination_system
+  end
 end
