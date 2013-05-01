@@ -75,6 +75,7 @@ module Nagios3
         gateway = TimeloxGateway.find_by_mac_address(gateway_hash[:host_name].upcase)
         if gateway
           gateway_hash[:ip_address] = gateway.ip_address
+          gateway_hash[:cable_modem_mac_address] = gateway.cable_modem_mac_address
           gateway_hash[:cmts_address] = gateway.cable_modem_termination_system.ip_address
         end
       end
