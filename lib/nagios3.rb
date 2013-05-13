@@ -65,10 +65,12 @@ else
   require 'active_support'
 
   ActiveRecord::Base.establish_connection(
-    :adapter => 'sqlite3',
-    :database => '/data/apps/probe/shared/config/production.db',
+    :adapter => 'postgresql',
+    :encoding => 'unicode',
+    :database => 'probe_production',
     :pool => 5,
-    :timeout => 5000
+    :username => 'ccisystems',
+    :password => nil
   )
 
   class CableModem < ActiveRecord::Base
