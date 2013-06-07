@@ -70,8 +70,8 @@ SQL
     end
 
     def get_from_database
-      host_sql = "select id, EXTRACT(EPOCH FROM time)::int AS time, host_id, host, service, status, duration, execution_time, latency, output, perfdata, created_at, sent_at from host_service_perfdata where sent_at is null;"
-      modem_sql = "select id, EXTRACT(EPOCH from time)::int AS time, host_id, host, service, status, duration, execution_time,  latency, output, perfdata, created_at, sent_at from modem_service_perfdata where sent_at is null;"
+      host_sql = "select id, EXTRACT(EPOCH FROM time)::int + 18000 AS time, host_id, host, service, status, duration, execution_time, latency, output, perfdata, created_at, sent_at from host_service_perfdata where sent_at is null;"
+      modem_sql = "select id, EXTRACT(EPOCH from time)::int + 18000 AS time, host_id, host, service, status, duration, execution_time,  latency, output, perfdata, created_at, sent_at from modem_service_perfdata where sent_at is null;"
       result = [parse_sql_table(host_sql), parse_modem_sql_table(modem_sql)]
     end
 
@@ -176,7 +176,7 @@ SQL
 
     def run_sql(sql)
       sql.gsub!("\n", " ")
-      `/usr/local/pgsql/bin/psql probe_production ccisystems -c "#{sql}"`
+      `PGPASSWORD=mb723wk8 /usr/bin/psql probe_production ccisystems -c "#{sql}"`
     end
   end
 
