@@ -175,7 +175,7 @@ SQL
 
     def run_sql(sql)
       sql.gsub!("\n", " ")
-      `/usr/local/pgsql/bin/psql probe_production ccisystems -c "#{sql}"`
+      `PGPASSWORD=mb723wk8 /usr/bin/psql probe_production ccisystems -c "#{sql}"`
     end
 
   end
