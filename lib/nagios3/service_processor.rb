@@ -19,7 +19,7 @@ module Nagios3
   private
     def parse_files
       entries, perfdata, modems = perfdata_files, [], []
-      entries.each do |entry|
+      entries.each do |entry
         lines = File.readlines(entry)
         File.open(entry, "w") # clear file
         lines.each do |line|
@@ -68,8 +68,8 @@ SQL
     end
 
     def get_from_database
-      host_sql = "select id, EXTRACT(EPOCH FROM time)::int + 18000 AS time, host_id, host, service, status, duration, execution_time, latency, output, perfdata, created_at, sent_at from host_service_perfdata where sent_at is null;"
-      modem_sql = "select id, EXTRACT(EPOCH from time)::int + 18000 AS time, host_id, host, service, status, duration, execution_time,  latency, output, perfdata, created_at, sent_at from modem_service_perfdata where sent_at is null;"
+      host_sql = "select id, EXTRACT(EPOCH FROM time)::int + 18000 AS time, host_id, host, service, status, duration, execution_time, latency, output, perfdata, created_at, sent_at from host_service_perfdata where sent_at is null order by created_at asc;"
+      modem_sql = "select id, EXTRACT(EPOCH from time)::int + 18000 AS time, host_id, host, service, status, duration, execution_time,  latency, output, perfdata, created_at, sent_at from modem_service_perfdata where sent_at is null order by created_at asc;"
       result = [parse_sql_table(host_sql), parse_modem_sql_table(modem_sql)]
     end
 

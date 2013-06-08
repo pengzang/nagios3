@@ -70,8 +70,8 @@ SQL
     end
 
     def get_from_database
-      host_sql = "select * from host_perfdata where sent_at is null"
-      modem_sql = "select * from modem_perfdata where sent_at is null"
+      host_sql = "select * from host_perfdata where sent_at is null order by created_at asc"
+      modem_sql = "select * from modem_perfdata where sent_at is null order by created_at asc"
       result = [parse_sql_table(host_sql), parse_sql_table(modem_sql)]
     end
 
