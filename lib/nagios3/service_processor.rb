@@ -19,7 +19,7 @@ module Nagios3
   private
     def parse_files
       entries, perfdata, modems = perfdata_files, [], []
-      entries.each do |entry
+      entries.each do |entry|
         lines = File.readlines(entry)
         File.open(entry, "w") # clear file
         lines.each do |line|
