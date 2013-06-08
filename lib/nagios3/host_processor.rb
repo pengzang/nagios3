@@ -97,7 +97,7 @@ SQL
     end
 
     def send_data(perfdata)
-      perfdata.in_groups_of(50, false) do |batch|
+      perfdata.in_groups_of(100, false) do |batch|
         push_request(Nagios3.host_perfdata_url, batch.to_json)
         mark_hosts(batch)
       end
@@ -122,7 +122,7 @@ SQL
     end
 
     def send_modems(modems)
-      modems.in_groups_of(50, false) do |batch|
+      modems.in_groups_of(100, false) do |batch|
         push_request(Nagios3.modem_host_perfdata_url, batch.to_json)
         mark_modems(batch)
       end

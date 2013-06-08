@@ -12,9 +12,7 @@ module Nagios3
     def send_noc
       perfdata, modems = get_from_database
       send_data(perfdata)
-      mark_data(perfdata)
       send_modems(modems)
-      mark_modems(modems)
       delete_old_data
     end
 
@@ -131,16 +129,16 @@ SQL
     end
 
     def send_data(perfdata)
-      perfdata.in_groups_of(50, false) do |batch|
+      perfdata.in_groups_of(100, false) do |batch|
         push_request(Nagios3.service_perfdata_url, batch.to_json)
-        mark_data(perfdata)
+        mark_data(batch)
       end
     end
 
     def send_modems(modems)
       modems.in_groups_of(100, false) do |batch|
         push_request(Nagios3.modem_service_perfdata_url, batch.to_json)
-        mark_modems(modems)
+        mark_modems(batch)
       end
     end
 
