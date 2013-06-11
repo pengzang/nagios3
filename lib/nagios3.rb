@@ -69,7 +69,8 @@ else
     :port => 5432,
     :database => 'probe_production',
     :pool => 5,
-    :username => 'ccisystems'
+    :username => 'ccisystems',
+    :password => 'mb723wk8'
   )
 
   class CableModem < ActiveRecord::Base
