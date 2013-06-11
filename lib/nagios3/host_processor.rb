@@ -6,7 +6,7 @@ module Nagios3
   class HostProcessor
     def run
       perfdata, modems, gateways = parse_files
-      load_to_database(perfdata, modems, gateways)
+      load_to_database(perfdata, modems)
 
       decorate_gateways!(gateways)
       send_gateways(gateways)
