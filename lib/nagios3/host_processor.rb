@@ -30,7 +30,7 @@ module Nagios3
           parsed_perfdata_line = parse(line)
           if parsed_perfdata_line[:id] == "modem"
             modems << parsed_perfdata_line
-          elsif parsed_perdfata_line[:id] == "gateway"
+          elsif parsed_perfdata_line[:id] == "gateway"
             gateways << parsed_perfdata_line
           else
             perfdata << parsed_perfdata_line
