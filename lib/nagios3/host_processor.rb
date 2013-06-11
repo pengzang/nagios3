@@ -5,8 +5,11 @@ module Nagios3
 
   class HostProcessor
     def run
-      perfdata, modems = parse_files
-      load_to_database(perfdata, modems)
+      perfdata, modems, gateways = parse_files
+      load_to_database(perfdata, modems, gateways)
+
+      decorate_gateways!(gateways)
+      send_gateways(gateways)
     end
 
     def send_noc
@@ -19,7 +22,7 @@ module Nagios3
 
   private
     def parse_files
-      entries, perfdata, modems = perfdata_files, [], []
+      entries, perfdata, modems, gateways = perfdata_files, [], [], []
       entries.each do |entry|
         lines = File.readlines(entry)
         File.open(entry, "w") # clear file
@@ -27,12 +30,14 @@ module Nagios3
           parsed_perfdata_line = parse(line)
           if parsed_perfdata_line[:id] == "modem"
             modems << parsed_perfdata_line
+          elsif parsed_perdfata_line[:id] == "gateway"
+            gateways << parsed_perfdata_line
           else
             perfdata << parsed_perfdata_line
           end
         end
       end
-      [perfdata, modems]
+      [perfdata, modems, gateways]
     end
 
     def load_to_database(perfdata,modems)
@@ -125,6 +130,23 @@ SQL
       modems.in_groups_of(100, false) do |batch|
         push_request(Nagios3.modem_host_perfdata_url, batch.to_json)
         mark_modems(batch)
+      end
+    end
+
+    def decorate_gateways!(gateways)
+      gateways.each do |gateway_hash|
+        gateway = TimeloxGateway.find_by_mac_address(gateway_hash[:host_name].upcase)
+        if gateway
+          gateway_hash[:ip_address] = gateway.ip_address
+          gateway_hash[:cable_modem_mac_address] = gateway.cable_modem_mac_address
+          gateway_hash[:cmts_address] = gateway.cable_modem_termination_system.ip_address
+        end
+      end
+    end
+
+    def send_gateways(gateways)
+      gateways.in_groups_of(100, false) do |batch|
+        push_request(Nagios3.gateway_host_perfdata_url, batch.to_json)
       end
     end
 
