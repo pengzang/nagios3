@@ -35,7 +35,7 @@ module Nagios3
 
       def to_hash
         hash = {}
-        [:name, :host_name, :alias, :address, :use, :register, :notifications_enabled].each do |field|
+        [:host_name, :alias, :address, :use, :register, :notifications_enabled].each do |field|
           hash[field] = self.send(field)
         end
         hash
