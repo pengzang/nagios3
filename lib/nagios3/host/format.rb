@@ -12,7 +12,7 @@ module Nagios3
       def to_config
         config = "define host {\n"
         config << "\t_ID #{self.id}\n"
-        config << "\tname #{self.name}\n"
+        #config << "\tname #{self.name}\n"
         config << "\thost_name #{self.host_name}\n"
         config << "\tuse #{self.use}\n"
         config << "\talias #{self.alias}\n"
@@ -43,7 +43,7 @@ module Nagios3
 
       def to_s
         host = "\n"
-        host << "Name: #{@name}\n" unless @name.nil?
+        #host << "Name: #{@name}\n" unless @name.nil?
         host << "HostName: #{@host_name}\n" unless @host_name.nil?
         host << "Alias: #{@alias}\n" unless @alias.nil?
         host << "Address: #{@address}\n" unless @address.nil?

@@ -9,7 +9,7 @@ module Nagios3
   class Host
     module Attributes
       
-      attr_accessor :id, :host_name, :alias, :address, :use, :name
+      attr_accessor :id, :host_name, :alias, :address, :use
       attr_accessor :host_groups
       
       attr_accessor :check_command, :check_interval, :retry_interval
