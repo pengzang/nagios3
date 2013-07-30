@@ -101,7 +101,7 @@ module Nagios3
         def parse(config)
           params = { :contacts => [], :groups => [] }
           params[:id] = $1.strip if config.match param_regexp("_ID")
-          #params[:name] = $1.strip if config.match param_regexp("name")
+          params[:name] = $1.strip if config.match param_regexp("name")
           params[:host_name] = $1.strip if config.match param_regexp("host_name")
           params[:alias] = $1.strip if config.match param_regexp("alias")
           params[:address] = $1.strip if config.match param_regexp("address")
