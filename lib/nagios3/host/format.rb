@@ -36,7 +36,7 @@ module Nagios3
       def to_hash
         hash = {}
         [:host_name, :alias, :address, :use, :register, :notifications_enabled].each do |field|
-          hash[field] = self.send(field)
+          hash[field] = self.send(field) if self.respond_to?(field)
         end
         hash
       end
